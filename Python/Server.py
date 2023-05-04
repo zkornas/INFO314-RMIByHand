@@ -2,20 +2,11 @@ import sys
 import socket
 import pickle
 
-class addition:
-    ID = "add"
-    lhs = 0
-    rhs = 0
-    ans = 0
-
-class division:
-    ID = "divide"
-    lhs = 0
-    rhs = 0
-    ans = 0
-
-class repeater:
-    ID = "echo"
+class my_request:
+    ID = ""
+    lhs = ""
+    rhs = ""
+    ans = ""
     msg = ""
     response = ""
 
@@ -31,7 +22,7 @@ def divide(lhs, rhs):
 
 # Do not modify the echo() function
 def echo(msg):
-    return "You said '" + str(msg) + "'!'"
+    return "You said " + str(msg) + "!"
 
 # Begin your server implementation here
 def main():
@@ -59,13 +50,16 @@ def main():
             data_unpickled.ans = add(data_unpickled.lhs, data_unpickled.rhs)
             data_pickle = pickle.dumps(data_unpickled)
             client_connection.send(data_pickle)
-        #elif data_unpickled.ID == "divide":
-        #    data_unpickled.ans = divide(data_unpickled.lhs, data_unpickled.rhs)
-        #    data_pickle = pickle.dumps(data_unpickled)
-        #    client_connection.send(data_pickle)
+        elif data_unpickled.ID == "divide":
+            try:
+                data_unpickled.ans = divide(data_unpickled.lhs, data_unpickled.rhs)
+            except:
+                data_unpickled.ans = Exception()
+            data_pickle = pickle.dumps(data_unpickled)
+            client_connection.send(data_pickle)
         elif data_unpickled.ID == "echo":
             print("We have an echo!")
-            data_unpickled.response == echo(data_unpickled.msg)
+            data_unpickled.response = echo(data_unpickled.msg)
             data_pickle = pickle.dumps(data_unpickled)
             client_connection.send(data_pickle)
             print("sending back pickled echo")
